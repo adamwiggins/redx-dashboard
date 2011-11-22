@@ -18,14 +18,14 @@ Send it generated data:
 
 Create the drain app, we'll call it `drain-app`:
 
-   $ heroku create -s cedar drain-app
-   $ git push heroku master
-   $ heroku scale web=1
-   $ heroku logs -t
+    $ heroku create -s cedar drain-app
+    $ git push heroku master
+    $ heroku scale web=1
+    $ heroku logs -t
 
 Send it generated data:
 
-   $ LOG_URL=https://drain-app.herokuap.com node gen.js
+    $ LOG_URL=https://drain-app.herokuap.com node gen.js
 
 
 ### Production Usage (Speculative)
