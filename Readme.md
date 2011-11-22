@@ -1,16 +1,35 @@
 ## Drain Example: NodeJS
 
-An example of how to implement a Logplex Drain as a NodeJS application deployed to Heroku.
+An example of how to implement an HTTPS Logplex drain as a NodeJS application deployed to Heroku.
 
 
-### Usage
+### Local Testing
 
-    $ cd drain-example-nodejs
-    $ heroku create -s cedar
-    $ heroku config:add AUTH=u:p
-    $ git push heroku master
-    $ heroku scale web=1
+Start the log receiver:
 
-    $ heroku logs:drains add https://u:p@stormy-cloud-2482.herokuapp.com/logs -a other-app
-    
-    $ heroku logs -t -a drain-example-nodejs
+    $ foreman start
+
+Send it generated data:
+
+    $ LOG_URL=http://127.0.0.1:5000 node gen.js
+
+
+### Production Testing
+
+Create the drain app, we'll call it `drain-app`:
+
+   $ heroku create -s cedar drain-app
+   $ git push heroku master
+   $ heroku scale web=1
+   $ heroku logs -t
+
+Send it generated data:
+
+   $ LOG_URL=https://drain-app.herokuap.com node gen.js
+
+
+### Production Usage (Speculative)
+
+Set the drain app's HTTPS URL as an Logplex drain for en emitting app. For example if we we're serving an app called `emit-app`:
+
+    $ heroku logs:drains add https://drain-app.herokuapp.com -a emit-app
