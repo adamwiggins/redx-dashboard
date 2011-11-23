@@ -25,7 +25,7 @@ Create the drain app, we'll call it `drain-app`:
 
 Send it generated data:
 
-    $ LOG_URL=https://drain-app.herokuap.com node gen.js
+    $ LOG_URL=https://drain-app.herokuapp.com node gen.js
 
 
 ### Production Usage (Speculative)
