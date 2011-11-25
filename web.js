@@ -1,6 +1,6 @@
 var http = require("http");
 
-var server = http.createServer(function (req, res) {
+var server = http.createServer(function(req, res) {
   console.log("request");
   req.setEncoding("utf8");
   res.writeHead(200, {"Content-Type": "application/json"});
