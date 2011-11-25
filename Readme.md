@@ -7,7 +7,7 @@ An example of how to implement an HTTPS Logplex drain as a NodeJS application de
 
 Start the log receiver:
 
-    $ foreman start
+    $ PORT=5000 node web.js
 
 Send it generated data:
 
