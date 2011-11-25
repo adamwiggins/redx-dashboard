@@ -15,12 +15,24 @@ setInterval(function() {
   req.write(JSON.stringify({"timestamp": "2011-08-03T:58:10+00:00", "source": "heroku", "ps": "router", "msg": "GET wombat.heroku.com/ dyno=web.1 queue=0 wait=0ms service=11ms status=200 bytes=2"}) + "\n");
 }, 100);
 
+req.on("error", function(res) {
+  console.log("error");
+  process.exit(1);
+});
+
 req.on("response", function(res) {
   console.log("response");
+  res.setEncoding("utf8");
 
-  res.on("error", function() {
-    console.log("error");
-    process.exit(1);
+  res.on("data", function(data) {
+    var lines = data.split("\n");
+    for (var i=0; i<lines.length; i++) {
+      var line = lines[i];
+      if (line != "") {
+        var message = JSON.parse(line);
+        console.log("message: " + JSON.stringify(message));
+      }
+    }
   });
 
   res.on("end", function() {
