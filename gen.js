@@ -9,11 +9,18 @@ var options = require("url").parse(url);
 
 console.log("connect");
 var req = ((options.protocol == "https:" ? https : http)).request(options);
+var ready = false;
+var emitted = 0;
 
 setInterval(function() {
-  console.log("emit");
-  req.write(JSON.stringify({"timestamp": "2011-08-03T:58:10+00:00", "source": "heroku", "ps": "router", "msg": "GET wombat.heroku.com/ dyno=web.1 queue=0 wait=0ms service=11ms status=200 bytes=2"}) + "\n");
-}, 100);
+  if (ready) {
+    emitted += 1;
+    console.log("emit");
+    req.write(JSON.stringify({"timestamp": "2011-08-03T:58:10+00:00", "source": "heroku", "ps": "router", "msg": "GET wombat.heroku.com/ dyno=web.1 queue=0 wait=0ms service=11ms status=200 bytes=2"}) + "\n");
+  } else {
+    console.log("wait");
+  }
+  }, 100);
 
 req.on("error", function(res) {
   console.log("error");
@@ -29,8 +36,9 @@ req.on("response", function(res) {
     for (var i=0; i<lines.length; i++) {
       var line = lines[i];
       if (line != "") {
+        ready = true;
         var message = JSON.parse(line);
-        console.log("message: " + JSON.stringify(message));
+        console.log("message: " + JSON.stringify(message) + " compare: " + JSON.stringify({"emitted": emitted}));
       }
     }
   });
@@ -45,3 +53,5 @@ req.on("response", function(res) {
     process.exit(1);
   });
 });
+
+req.write("\n");
