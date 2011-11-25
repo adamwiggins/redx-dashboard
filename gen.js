@@ -22,8 +22,8 @@ setInterval(function() {
   }
   }, 100);
 
-req.on("error", function(res) {
-  console.log("error");
+req.on("error", function(e) {
+  console.log("error: " + e);
   process.exit(1);
 });
 
