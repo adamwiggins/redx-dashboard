@@ -30,6 +30,6 @@ Send it generated data:
 
 ### Production Usage (Speculative)
 
-Set the drain app's HTTPS URL as an Logplex drain for en emitting app. For example if we we're serving an app called `emit-app`:
+Set the drain app's HTTPS URL as a Logplex drain for en emitting app. For example if we we're serving an app called `emit-app`:
 
     $ heroku drains add https://drain-app.herokuapp.com -a emit-app
