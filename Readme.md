@@ -1,6 +1,6 @@
 ## Drain Example: NodeJS
 
-An example of how to implement an HTTPS Logplex drain as a NodeJS application deployed to Heroku.
+An example of how to implement an HTTPS event stream drain as a NodeJS application deployed to Heroku.
 
 
 ### Local Testing
