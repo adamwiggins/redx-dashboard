@@ -16,16 +16,17 @@ Start the log receiver:
     $ export $(cat .env)
     $ node web.js
 
-Send it generated data using the client from the [`drain-example-nodejs`](https://github.com/heroku/drain-example-nodejs) repo:
+Send it generated data:
 
-    $ LOG_URL=http://127.0.0.1:5000 node ../drain-example-nodejs/gen.js
+    $ LOG_URL=http://127.0.0.1:5000 node gen.js
 
 Inspect the events stored in mongodb:
 
     $ mongo
     > use drain-development
+    > db.events.count();
     > db.events.find();
-    > db.evnets.find({ps: "web.1"});
+    > db.events.find({ps: "web.1"});
 
 ### Production Testing
 
