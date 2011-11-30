@@ -51,7 +51,7 @@ var mongoOpts = url.parse(env("MONGODB_URL"));
 var httpPort = parseInt(env("PORT"));
 
 var mongoServer = new mongodb.Server(mongoOpts.hostname, parseInt(mongoOpts.port), {"auto_reconnect": true});
-var db = new mongodb.Db(mongoOpts.path.slice(1), mongoServer, {});
+var db = new mongodb.Db(mongoOpts.pathname.slice(1), mongoServer, {});
 log("mongo open");
 db.open(function(e, client) {
   if (e) { throw(e); }
