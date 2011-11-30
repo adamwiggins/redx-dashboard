@@ -46,7 +46,11 @@ Send it generated data:
 
 See what got stored in MongoDB:
 
-    $ heroku addons:open mongolabl
+    $ mongo
+    > conn = new Mongo("host:port")
+    > db = conn.getDB("db")
+    > db.auth("user", "pass")
+    > db.events.count();
 
 
 ### Production Usage
