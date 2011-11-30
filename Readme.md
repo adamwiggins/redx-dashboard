@@ -34,6 +34,7 @@ Create the drain app, we'll call it `drain-app`:
 
     $ heroku create -s cedar drain-app
     $ heroku addons:add mongolab:small
+    $ heroku config -a drain-app
     $ heroku config:add MONGODB_URL="mongodb://..."
     $ git push heroku master
     $ heroku scale web=1
@@ -41,7 +42,7 @@ Create the drain app, we'll call it `drain-app`:
 
 Send it generated data:
 
-    $ LOG_URL=https://drain-app.herokuapp.com node ../drain-example-nodejs/gen.js
+    $ LOG_URL=https://drain-app.herokuapp.com node gen.js
 
 
 ### Production Usage
