@@ -44,6 +44,10 @@ Send it generated data:
 
     $ LOG_URL=https://drain-app.herokuapp.com node gen.js
 
+See what got stored in MongoDB:
+
+    $ heroku addons:open mongolabl
+
 
 ### Production Usage
 
