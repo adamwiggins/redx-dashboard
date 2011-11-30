@@ -29,7 +29,7 @@ req.on("error", function(e) {
 });
 
 req.on("response", function(res) {
-  log("response");
+  log("response stats=" + res.statusCode);
   res.setEncoding("utf8");
 
   res.on("end", function() {
