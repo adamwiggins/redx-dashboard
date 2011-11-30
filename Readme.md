@@ -16,10 +16,9 @@ Start the log receiver:
     $ export $(cat .env)
     $ node web.js
 
-Send it generated data:
+Send it generated data using the client from the [`drain-example-nodejs`](https://github.com/heroku/drain-example-nodejs) repo:
 
-    $ LOG_URL=http://127.0.0.1:5000 node gen.js
-
+    $ LOG_URL=http://127.0.0.1:5000 node ../drain-example-nodejs/gen.js
 
 ### Production Testing
 
@@ -34,7 +33,7 @@ Create the drain app, we'll call it `drain-app`:
 
 Send it generated data:
 
-    $ LOG_URL=https://drain-app.herokuapp.com node gen.js
+    $ LOG_URL=https://drain-app.herokuapp.com node ../drain-example-nodejs/gen.js
 
 
 ### Production Usage
