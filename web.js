@@ -56,6 +56,15 @@ log("mongo open");
 db.open(function(e, client) {
   if (e) { throw(e); }
   log("mongo opened");
+  log("mongo auth");
+  var auth = mongoOpts.auth && mongoOpts.auth.split(":");
+  if (auth) {
+    log("mongo auth");
+    db.authenticate(auth[0], auth[1], function(e, result) {
+      if (e) { throw(e); }
+      log("mongo authed");
+    });
+  }
   var mongoColl = new mongodb.Collection(client, "events");
   var httpServer = http.createServer(httpHandler(mongoColl));
   log("http listen port=" + httpPort);
