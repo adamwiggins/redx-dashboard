@@ -20,6 +20,13 @@ Send it generated data using the client from the [`drain-example-nodejs`](https:
 
     $ LOG_URL=http://127.0.0.1:5000 node ../drain-example-nodejs/gen.js
 
+Inspect the events stored in mongodb:
+
+    $ mongo
+    > use drain-development
+    > db.events.find();
+    > db.evnets.find({ps: "web.1"});
+
 ### Production Testing
 
 Create the drain app, we'll call it `drain-app`:
