@@ -1,6 +1,6 @@
-## Drain Example: NodeJS to MongoDB
+## Drain Example: Dashboard via Nodejs
 
-An example of how to implement an HTTPS event stream drain in Node.js that stores events in a MongoDB database.
+An example HTTPS event stream drain in Node.js that stores events in a MongoDB database.
 
 
 ### Local Testing
