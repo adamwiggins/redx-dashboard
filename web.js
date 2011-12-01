@@ -24,7 +24,11 @@ var initStats = function() {
 var updateStats = function(stats, event) {
   if ((event.source == "heroku") && (event.ps == "router")) {
     var slice = getSlice();
-    stats[slice] += 1;
+    if (stats[slice] != undefined) {
+      stats[slice] += 1;
+    } else {
+      stats[slice] = 0;
+    }
   }
 }
 
@@ -62,13 +66,11 @@ var httpHandler = function(stats) {
     });
 
     req.on("data", function(d) {
-      log("http request at=data");
       var lines = d.split("\n");
       for (var i=0; i<lines.length; i++) {
         var line = lines[i];
         if (line != "") {
           var event = JSON.parse(line);
-          log("http request at=event");
           updateStats(stats, event);
         }
       }
