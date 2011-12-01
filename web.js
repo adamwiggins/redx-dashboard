@@ -58,8 +58,13 @@ var httpHandler = function(stats) {
     log("http request at=start path=" + path);
     req.setEncoding("utf8");
     if (path == "/") {
-      var content = fs.readFileSync("index.html");
+      var content = fs.readFileSync("public/index.html");
       res.writeHead(200, {"Content-Type": "text/html",
+                          "Content-Length": content.length});
+      res.end(content);
+    } else if ((path == "/jquery-1.6.2.js") || (path == "/jquery.sparkline.js") || (path == "/dashboard.js")) {
+      var content = fs.readFileSync("public" + path);
+      res.writeHead(200, {"Content-Type": "application/javascript",
                           "Content-Length": content.length});
       res.end(content);
     } else if (path == "/stats") {
