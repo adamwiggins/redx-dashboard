@@ -53,28 +53,34 @@ var gcStats = function(stats) {
 
 var httpHandler = function(stats) {
   return function(req, res) {
-    log("http request at=start");
+    var path = url.parse(req.url).pathname;
+    log("http request at=start path=" + path);
     req.setEncoding("utf8");
-    res.writeHead(200, {"Content-Type": "application/json"});
-
-    req.on("end", function() {
-      log("http request at=end");
-    });
-
-    req.on("close", function() {
-      log("http request at=close");
-    });
-
-    req.on("data", function(d) {
-      var lines = d.split("\n");
-      for (var i=0; i<lines.length; i++) {
-        var line = lines[i];
-        if (line != "") {
-          var event = JSON.parse(line);
-          updateStats(stats, event);
+    if (path == "/") {
+      res.writeHead(200, {"Content-Type": "application/json"});
+      res.end(fs.readFileSync("index.html"), "utf8");
+    } else if (path == "/stats") {
+      res.writeHead(200, {"Content-Type": "application/json"});
+      res.end(JSON.stringify(emitStats(stats)) + "\n");
+    } else {
+      res.writeHead(200, {"Content-Type": "application/json"});
+      req.on("end", function() {
+        log("http request at=end");
+      });
+      req.on("close", function() {
+        log("http request at=close");
+      });
+      req.on("data", function(d) {
+        var lines = d.split("\n");
+        for (var i=0; i<lines.length; i++) {
+          var line = lines[i];
+          if (line != "") {
+            var event = JSON.parse(line);
+            updateStats(stats, event);
+          }
         }
-      }
-    });
+      });
+    }
   }
 }
 

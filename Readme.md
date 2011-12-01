@@ -15,6 +15,10 @@ Send it generated data:
 
     $ LOG_URL=http://127.0.0.1:5000/events node gen.js
 
+See the calculated stats:
+
+    $ watch -n 1 'curl -s http://127.0.0.1:5000/stats'
+
 See the dashboard rendering the stats:
 
     $ open http://127.0.0.1:5000/
@@ -32,6 +36,10 @@ Create the drain app, we'll call it `drain-app`:
 Send it generated data:
 
     $ LOG_URL=https://drain-app.herokuapp.com/events node gen.js
+
+See the stats:
+
+    $ watch -n 1 'curl -s http://drain-app.herokuapp.com/stats'
 
 See the dashboard:
 
