@@ -1,3 +1,4 @@
+var fs = require("fs");
 var url = require("url");
 var http = require("http");
 
@@ -57,8 +58,10 @@ var httpHandler = function(stats) {
     log("http request at=start path=" + path);
     req.setEncoding("utf8");
     if (path == "/") {
-      res.writeHead(200, {"Content-Type": "application/json"});
-      res.end(fs.readFileSync("index.html"), "utf8");
+      var content = fs.readFileSync("index.html");
+      res.writeHead(200, {"Content-Type": "text/html",
+                          "Content-Length": content.length});
+      res.end(content);
     } else if (path == "/stats") {
       res.writeHead(200, {"Content-Type": "application/json"});
       res.end(JSON.stringify(emitStats(stats)) + "\n");
