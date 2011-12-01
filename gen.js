@@ -52,4 +52,4 @@ setInterval(function() {
     var event = events[randInt(events.length)];
     req.write(JSON.stringify(event) + "\n");
   }
-}, 500);
+}, 250);

@@ -13,11 +13,41 @@ var env = function(k) {
   }
 }
 
-var hitRedis = function(redis, event, cb) {
-  //
+var getSlice = function() {
+  return Math.floor((new Date().getTime()) / 1000.0);
 }
 
-var httpHandler = function(redis) {
+var initStats = function() {
+  return {};
+}
+
+var updateStats = function(stats, event) {
+  if ((event.source == "heroku") && (event.ps == "router")) {
+    var slice = getSlice();
+    stats[slice] += 1;
+  }
+}
+
+var emitStats = function(stats, event) {
+  var currentSlice = getSlice();
+  var vals = [];
+  for (var slice=(currentSlice-20); slice<currentSlice; slice++) {
+    vals.push(stats[slice] || 0);
+  }
+  return vals;
+}
+
+var gcStats = function(stats) {
+  log("stats gc");
+  var currentSlice = getSlice();
+  for (var slice in stats) {
+    if (slice < (currentSlice - 30)) {
+      delete stats[slice];
+    }
+  }
+}
+
+var httpHandler = function(stats) {
   return function(req, res) {
     log("http request at=start");
     req.setEncoding("utf8");
@@ -39,39 +69,22 @@ var httpHandler = function(redis) {
         if (line != "") {
           var event = JSON.parse(line);
           log("http request at=event");
-          hitRedis(redi, event, function(e, result) {
-            log("http request at=stored");
-          });
+          updateStats(stats, event);
         }
       }
     });
   }
 }
 
-var mongoOpts = url.parse(env("MONGODB_URL"));
-var httpPort = parseInt(env("PORT"));
+var port = parseInt(env("PORT"));
 
-var mongoServer = new mongodb.Server(mongoOpts.hostname, parseInt(mongoOpts.port), {"auto_reconnect": true});
-var db = new mongodb.Db(mongoOpts.pathname.slice(1), mongoServer, {});
-log("mongo open");
-db.open(function(e, client) {
-  if (e) { throw(e); }
-  log("mongo opened");
-  log("mongo auth");
-  var auth = mongoOpts.auth && mongoOpts.auth.split(":");
-  if (auth) {
-    log("mongo auth");
-    db.authenticate(auth[0], auth[1], function(e, result) {
-      if (e) { throw(e); }
-      log("mongo authed");
-    });
-  }
-  var mongoColl = new mongodb.Collection(client, "events");
-  var httpServer = http.createServer(httpHandler(mongoColl));
-  log("http listen port=" + httpPort);
-  httpServer.listen(httpPort, "0.0.0.0", function() {
-    log("http listening port=" + httpPort);
-  });
+log("stats init");
+var stats = initStats();
+
+var server = http.createServer(httpHandler(stats));
+log("http listen port=" + port);
+server.listen(port, "0.0.0.0", function() {
+  log("http listening port=" + port);
 });
 
 process.on("SIGTERM", function() {
@@ -79,3 +92,11 @@ process.on("SIGTERM", function() {
   log("exit status=0");
   process.exit(0);
 });
+
+setInterval(function() {
+  gcStats(stats)
+}, 2000);
+
+setInterval(function() {
+  log("stats watch vals=" + JSON.stringify(emitStats(stats)));
+}, 1000)
