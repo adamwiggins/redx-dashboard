@@ -45,10 +45,10 @@ req.on("response", function(res) {
 
 setInterval(function() {
   var t = (new Date().getTime());
-  var rate = 10 + 5 * (Math.sin(t / 2000.0));
+  var rate = 10 + 5 * (Math.sin(t / 3000.0));
   console.log("tick rate=" + rate);
   for (var i=0; i<rate; i++) {
     var event = events[randInt(events.length)];
     req.write(JSON.stringify(event) + "\n");
   }
-}, 250);
+}, 100);
