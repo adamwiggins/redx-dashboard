@@ -1,7 +1,4 @@
 {
   "name": "drain-app",
-  "version": "0.0.1",
-  "dependencies": {
-    "mongodb": "0.9.7-1.3"
-  }
+  "version": "0.0.1"
 }
