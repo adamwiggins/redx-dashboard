@@ -14,6 +14,17 @@ var env = function(k) {
   }
 }
 
+var initSplitter = function() {
+  return {last: ""};
+}
+
+var applySplitter = function(splitter, data) {
+  data = (splitter.last + data);
+  var lines = data.split("\n");
+  splitter.last = lines[lines.length-1];
+  return lines.slice(0, -1);
+}
+
 var getSlice = function() {
   return Math.floor((new Date().getTime()) / 1000.0);
 }
@@ -78,14 +89,12 @@ var httpHandler = function(stats) {
       req.on("close", function() {
         log("http request at=close");
       });
-      req.on("data", function(d) {
-        var lines = d.split("\n");
+      var splitter = initSplitter();
+      req.on("data", function(data) {
+        var lines = applySplitter(splitter, data);
         for (var i=0; i<lines.length; i++) {
-          var line = lines[i];
-          if (line != "") {
-            var event = JSON.parse(line);
-            updateStats(stats, event);
-          }
+          var event = JSON.parse(lines[i]);
+          updateStats(stats, event);
         }
       });
     }
