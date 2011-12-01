@@ -5,11 +5,6 @@ An example HTTPS event stream drain in Node.js that computes and dashboards real
 
 ### Local Testing
 
-Start a Redis database:
-
-    # brew install redis
-    $ redis-server
-
 Start the log receiver:
 
     $ cp .env.sample .env
@@ -34,9 +29,6 @@ See the dashboard rendering the stats:
 Create the drain app, we'll call it `drain-app`:
 
     $ heroku create -s cedar drain-app
-    $ heroku addons:add redistogo
-    $ heroku config -a drain-app
-    $ heroku config:add REDIS_URL="redis://..."
     $ git push heroku master
     $ heroku scale web=1
     $ heroku logs -t

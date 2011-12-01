@@ -1,6 +1,5 @@
 var url = require("url");
 var http = require("http");
-var mongodb = require("mongodb");
 
 var log = function(m) {
   console.log("web " + m);
@@ -14,12 +13,15 @@ var env = function(k) {
   }
 }
 
-var httpHandler = function(mongoColl) {
+var hitRedis = function(redis, event, cb) {
+  //
+}
+
+var httpHandler = function(redis) {
   return function(req, res) {
     log("http request at=start");
     req.setEncoding("utf8");
     res.writeHead(200, {"Content-Type": "application/json"});
-    res.write("\n");
 
     req.on("end", function() {
       log("http request at=end");
@@ -36,10 +38,9 @@ var httpHandler = function(mongoColl) {
         var line = lines[i];
         if (line != "") {
           var event = JSON.parse(line);
-          log("mongo store at=start");
-          mongoColl.insert(event, {safe: true}, function(e, result) {
-            if (e) { throw(e); }
-            log("mongo store at=finish");
+          log("http request at=event");
+          hitRedis(redi, event, function(e, result) {
+            log("http request at=stored");
           });
         }
       }
