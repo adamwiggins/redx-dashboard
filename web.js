@@ -33,13 +33,11 @@ var initStats = function() {
   return {};
 }
 
+var lastKeys = 0;
+
 var updateStats = function(stats, event) {
-  var slice = getSlice();
-  if (event.keys != undefined) {
-    stats[slice] = event.keys;
-  } else {
-    stats[slice] = 0;
-  }
+  console.log("got event.keys = " + event.keys);
+  lastKeys = event.keys;
 }
 
 var emitStats = function(stats, event) {
@@ -49,16 +47,6 @@ var emitStats = function(stats, event) {
     vals.push(stats[slice] || 0);
   }
   return vals;
-}
-
-var gcStats = function(stats) {
-  log("stats gc");
-  var currentSlice = getSlice();
-  for (var slice in stats) {
-    if (slice < (currentSlice - 30)) {
-      delete stats[slice];
-    }
-  }
 }
 
 var httpHandler = function(stats) {
@@ -107,6 +95,13 @@ var port = parseInt(env("PORT"));
 log("stats init");
 var stats = initStats();
 
+setInterval(function() {
+  var slice = getSlice();
+  stats[slice] = lastKeys;
+  console.log("lastKeys = " + lastKeys);
+}, 1000);
+
+
 var server = http.createServer(httpHandler(stats));
 log("http listen port=" + port);
 server.listen(port, "0.0.0.0", function() {
@@ -118,10 +113,6 @@ process.on("SIGTERM", function() {
   log("exit status=0");
   process.exit(0);
 });
-
-setInterval(function() {
-  gcStats(stats)
-}, 2000);
 
 setInterval(function() {
   log("stats watch vals=" + JSON.stringify(emitStats(stats)));
