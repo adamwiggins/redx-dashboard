@@ -34,13 +34,11 @@ var initStats = function() {
 }
 
 var updateStats = function(stats, event) {
-  if ((event.source == "heroku") && (event.ps == "router")) {
-    var slice = getSlice();
-    if (stats[slice] != undefined) {
-      stats[slice] += 1;
-    } else {
-      stats[slice] = 0;
-    }
+  var slice = getSlice();
+  if (event.keys != undefined) {
+    stats[slice] = event.keys;
+  } else {
+    stats[slice] = 0;
   }
 }
 
@@ -81,7 +79,7 @@ var httpHandler = function(stats) {
     } else if (path == "/stats") {
       res.writeHead(200, {"Content-Type": "application/json"});
       res.end(JSON.stringify(emitStats(stats)) + "\n");
-    } else {
+    } else if (path == "/logs") {
       res.writeHead(200, {"Content-Type": "application/json"});
       req.on("end", function() {
         log("http request at=end");
@@ -93,8 +91,11 @@ var httpHandler = function(stats) {
       req.on("data", function(data) {
         var lines = applySplitter(splitter, data);
         for (var i=0; i<lines.length; i++) {
-          var event = JSON.parse(lines[i]);
-          updateStats(stats, event);
+          console.log("parsing: " + lines[i]);
+          if (lines[i].length > 0) {
+            var event = JSON.parse(lines[i]);
+            updateStats(stats, event);
+          }
         }
       });
     }
